@@ -3,6 +3,7 @@ from selenium import webdriver
 import time
 import json
 from agent_tools import tools
+import base64
 
 class BrowsingAgent(Agent):
     def __init__(self, name, engine, agent_type, api_key):
@@ -14,7 +15,10 @@ class BrowsingAgent(Agent):
         self.driver.get(url)
         #time.sleep(1)
         screenshot = self.driver.get_screenshot_as_base64()
-        return screenshot
+        screenshot = str.encode(screenshot)
+        file_id = self.add_file(screenshot)
+#        self.client.images.create_variation(file_id, 'screenshot', 'assistants')
+        return "Screenshot added to knowledge with id of " + file_id
 
     def run_function(self, retrieved):
         message = retrieved['required_action']['submit_tool_outputs']['tool_calls']

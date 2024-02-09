@@ -34,9 +34,10 @@ class Agent:
     def add_message(self, role, message):
         self.client.beta.threads.messages.create(thread_id=self.thread.id, role=role, content=message)
 
-    def add_file(self, file):
-        file = self.client.beta.assistants.files.create(assistant_id=self.agent.id, file=file)
-        self.file_dict[file.id] = file
+    def add_file(self, file) -> str:
+        file = self.client.files.create(file=file, purpose='assistants')
+        file = self.client.beta.assistants.files.create(assistant_id=self.agent.id, file_id=file.id)
+        return file.id
 
     def delete_file(self, file):
         self.client.beta.assistants.files.delete(assistant_id=self.agent.id, file_id=file)
@@ -59,6 +60,7 @@ class Agent:
                 #print(f'{name} tool list: {tool_list}')
 
                 self.client.beta.threads.runs.submit_tool_outputs(run_id=run_id, thread_id=thread_id, tool_outputs=tool_list)
+                
 
             elif status == 'failed':
                 print(retrieved.model_dump())
