@@ -12,13 +12,10 @@ async def main():
     agent.create_run()
     print(agent.get_response())
     """
-    browsing_agent = BrowsingAgent('browsing_agent_1', 'gpt-4-vision-preview', 'browser', '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')
-    browsing_agent.create_agent()
-    browsing_agent.create_thread()
-    browsing_agent.add_message('user', 'take a screenshot of https://marketlingo.ai and describe the content of the screenshot.')
-    browsing_agent.create_run()
-    print(browsing_agent.get_response())
-
+    browsing_agent = BrowsingAgent('browsing_agent_1', 'gpt-4-turbo-preview', 'browser', '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')
+    print(await browsing_agent.view_page('https://www.google.com'))
+    #await browsing_agent.create_run('Hello, I am a user')
+    #print(browsing_agent.retrieve_messages())
 
     print('done')
     #agent.add_message('user', 'Hello, I am a user')

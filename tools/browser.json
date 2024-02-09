@@ -1,11 +1,5 @@
 [
     {
-      "type": "code_interpreter"
-    },
-    {
-      "type": "retrieval"
-    },
-    {
       "type": "function",
       "function": {
         "name": "take_screenshot",
