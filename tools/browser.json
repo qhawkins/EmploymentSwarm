@@ -1,0 +1,27 @@
+[
+    {
+      "type": "code_interpreter"
+    },
+    {
+      "type": "retrieval"
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "take_screenshot",
+        "description": "function to capture content of a webpage in a screenshot.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "url":{
+              "type": "string",
+              "description": "the url of the page to take a screenshot of."
+            }
+          },
+          "required": [
+            "url"
+        ]
+        }
+      }
+    }
+]

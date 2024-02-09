@@ -1,0 +1,27 @@
+[
+    {
+      "type": "code_interpreter"
+    },
+    {
+      "type": "retrieval"
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "prompt_user",
+        "description": "function to ask the user for input or to ask the user for permission.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "prompt_to_user":{
+              "type": "string",
+              "description": "the prompt to give to the user"
+            }
+          },
+          "required": [
+            "prompt_to_user"
+        ]
+        }
+      }
+    }
+]
