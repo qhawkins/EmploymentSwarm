@@ -7,13 +7,43 @@
         "parameters": {
           "type": "object",
           "properties": {
-            "url":{
+          },
+          "required": [
+        ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "load_page",
+        "description": "function to navigate to a webpage using a URL.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "url": {
               "type": "string",
-              "description": "the url of the page to take a screenshot of."
+              "description": "URL of the webpage to navigate to."
             }
           },
           "required": [
             "url"
+        ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "move_cursor",
+        "description": "function to move the cursor relative to its current position using relative x and y values.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+          },
+          "required": [
+            "x",
+            "y"
         ]
         }
       }
