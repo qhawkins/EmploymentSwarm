@@ -75,51 +75,51 @@ class BrowsingAgent(Agent):
         async for response_chunk in response_generator:
             if response_chunk.choices != None:
                 deltas = response_chunk.choices[0].delta
-                print(deltas)
-                if deltas != None and deltas.tool_calls != None:
-                    if deltas.tool_calls[0].function.name != None:
-                        function_name = deltas.tool_calls[0].function.name
-                    if deltas.tool_calls[0].function.arguments != None:    
-                        function_arguments = deltas.tool_calls[0].function.arguments
-                    if function_arguments != '' or None:
-                        tool_args.append(function_arguments)#.replace('"', '').replace("'", ''))
-                    if len(tool_args)>0 and "]" in tool_args[-1]:
-                        print(f"tool_args: {tool_args}")
-                        tool_args = ''.join(tool_args)
-                        tool_args = json.loads(tool_args)
-                        
-                        tool_dict = {}
-                        for x in tool_args['tool_uses']:
-                            tool_dict[x['recipient_name'].replace('functions.', '')] = x['parameters']
+                if deltas.tool_calls != None and deltas.tool_calls[0].function.name != None:
+                    function_name = deltas.tool_calls[0].function.name
+                    
+                if deltas.tool_calls != None and deltas.tool_calls[0].function.arguments != None:    
+                    function_arguments = deltas.tool_calls[0].function.arguments
+                    tool_args.append(function_arguments)#.replace('"', '').replace("'", ''))
+                    print(tool_args)
 
-                        for x, y in tool_dict.items():
-                            print(f"function name: {x}, function args: {y}")
-                            function_response[x] = self.call_function(
-                                y
-                            )
-                        tool_dict = {}
-                        tool_args = []
-                        function_flag = True
+                if deltas.content==None and deltas.function_call==None and deltas.role==None and deltas.tool_calls==None and '"}' in tool_args:
+                    tool_args = ''.join(tool_args)
+                    tool_args = json.loads(tool_args)
+                    tool_dict = {}
+                    tool_dict[function_name] = tool_args
+
                 
-                if deltas.content != None:
+                    print(f"function name: {function_name}, function args: {tool_args}")
+                    print(tool_dict)
+                    function_response[function_name] = self.call_function(
+                        tool_dict
+                    )
+                    tool_dict = {}
+                    tool_args = []
+                    function_flag = True
                     yield deltas.content, function_flag, function_response
+            
+            if deltas.content != None:
+                yield deltas.content, function_flag, function_response
 
         yield deltas.content, function_flag, function_response                
 
 
-    def call_function(self, func_call):
+    async def call_function(self, func_call):
         func_output = {}
         for function_name, function_args in func_call.items():
             if function_name == 'view_page':
-                response = self.view_page(**function_args)
+                response = await self.view_page(**function_args)
                 func_output[function_name] = response
 
             elif function_name == 'move_cursor':
-                response = self.move_cursor(**function_args)
+                response = await self.move_cursor(**function_args)
                 func_output[function_name] = response
 
             elif function_name == 'load_page':
-                response = self.load_page(**function_args)
+                print("load function")
+                response = await self.load_page(**function_args)
                 func_output[function_name] = response
 
         return func_output
