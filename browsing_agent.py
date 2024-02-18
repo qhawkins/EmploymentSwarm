@@ -119,7 +119,7 @@ class BrowsingAgent(Agent):
     async def call_function(self, func_call):
         for function_name, function_args in func_call.items():
             if function_name == 'view_page':
-                response = await self.view_page(**function_args)
+                response = await self.view_page()
                 
             elif function_name == 'move_cursor':
                 response = await self.move_cursor(**function_args)
@@ -128,11 +128,11 @@ class BrowsingAgent(Agent):
                 response = await self.load_page(**function_args)
                 
             elif function_name == 'end_conversation':
-                response = await self.end_conversation(**function_args)
+                response = await self.end_conversation()
                 #func_output[function_name] = response
                 self.conversation = False
             elif function_name == 'click_element':
-                response = await self.click_element(**function_args)
+                response = await self.click_element()
 
         return response
        
