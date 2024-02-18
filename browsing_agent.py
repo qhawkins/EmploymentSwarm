@@ -54,6 +54,7 @@ class BrowsingAgent(Agent):
             messages=message,
             stream=False,
             max_tokens=4096,
+            temperature=0
         )
         print("screenshot response created")
         return response.choices[0].message.content
