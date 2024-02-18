@@ -63,6 +63,10 @@ class BrowsingAgent(Agent):
         pyautogui.moveRel(x, y, duration=1.2)
         return f"Cursor moved relative to the past position by {x} pixels in the x direction and {y} pixels in the y direction."
 
+    async def click_element():
+        pyautogui.click()
+        return "Element clicked."
+
     async def get_ai_response(self, message_list):
         response_generator = await self.client.chat.completions.create(
         model=self.engine,
@@ -127,6 +131,8 @@ class BrowsingAgent(Agent):
                 response = await self.end_conversation(**function_args)
                 #func_output[function_name] = response
                 self.conversation = False
+            elif function_name == 'click_element':
+                response = await self.click_element(**function_args)
 
         return response
        

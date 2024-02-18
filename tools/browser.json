@@ -67,5 +67,19 @@
         }
       }
     }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "click_element",
+      "description": "function to click on an element at the cursors current location.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+        },
+        "required": [
+        ]
+      }
+    }
   }
 ]

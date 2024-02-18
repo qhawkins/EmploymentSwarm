@@ -13,8 +13,10 @@ async def main():
     print(agent.get_response())
     """
     browsing_agent = BrowsingAgent('browsing_agent_1', 'gpt-4-turbo-preview', 'browser', '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')
-    await browsing_agent.create_run('View the webpage https://marketlingo.ai and tell me what you see. Click on the element on the page that you find most interesting and tell me about it. ONLY LOAD THE WEBPAGE ONCE')
-    print(browsing_agent.retrieve_messages())
+    await browsing_agent.create_run('View the webpage https://marketlingo.ai and tell me what you see. Click on the element on the page that you find most interesting and tell me about it. ONLY LOAD THE WEBPAGE ONCE. ONLY END THE CONVERSATION ONCE ALL GOALS HAVE BEEN REACHED.')
+    messages = browsing_agent.retrieve_messages()
+    for x in messages:
+        print(x)
 
     #await browsing_agent.create_run('Hello, I am a user')
     #print(browsing_agent.retrieve_messages())
