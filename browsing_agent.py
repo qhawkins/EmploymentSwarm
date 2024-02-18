@@ -148,13 +148,10 @@ class BrowsingAgent(Agent):
             if await_response:
                 async for text, function_flag, function_responses in self.get_ai_response():
                     if text != None:
-                        if initial_response:
-                            initial_response = False
-
                         text_storage = text_storage + text
                 await_response = False
-            else:
-                self.message_list.append({'role': 'assistant', 'content': text_storage})
+            
+            self.message_list.append({'role': 'assistant', 'content': text_storage})
             print(self.message_list[-1])
 
             
