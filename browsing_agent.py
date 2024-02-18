@@ -31,7 +31,7 @@ class BrowsingAgent(Agent):
         screenshot = self.driver.get_screenshot_as_png()
 
         screenshot = base64.b64encode(screenshot).decode('utf-8')
-        
+        print("screenshot taken")
         #screenshot = str.encode(screenshot)
         screenshot = f"data:image/png;base64,{screenshot}"
         message = [
@@ -56,16 +56,17 @@ class BrowsingAgent(Agent):
             stream=False,
             max_tokens=4096,
         )
+        print("screenshot response created")
         return response.choices[0].message.content
     
     async def move_cursor(self, x: int, y: int):
         pyautogui.moveRel(x, y, duration=1.2)
         return f"Cursor moved relative to the past position by {x} pixels in the x direction and {y} pixels in the y direction."
 
-    async def get_ai_response(self):
+    async def get_ai_response(self, message_list):
         response_generator = await self.client.chat.completions.create(
         model=self.engine,
-        messages=self.message_list,
+        messages=message_list,
         stream=True,
         tools=self.tools,
         tool_choice='auto'
@@ -137,7 +138,7 @@ class BrowsingAgent(Agent):
             await_response = False
             initial_response = True
             #print(chat_history)
-            async for text, function_flag, function_responses in self.get_ai_response():
+            async for text, function_flag, function_responses in self.get_ai_response(self.message_list):
                 #print(chat_history)
                 print(text)
                 if text != None:
@@ -148,7 +149,7 @@ class BrowsingAgent(Agent):
                     text_storage = text_storage + "These are the tool call results: " + str(function_responses)
                     await_response = True
         
-            self.message_list.append({'role': 'assistant', 'content': text_storage})
+            self.message_list.append({'role': 'user', 'content': text_storage})
             
 
             
