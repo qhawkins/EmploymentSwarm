@@ -120,7 +120,6 @@ class BrowsingAgent(Agent):
                 response = await self.move_cursor(**function_args)
                 
             elif function_name == 'load_page':
-                print("load function")
                 response = await self.load_page(**function_args)
                 
             elif function_name == 'end_conversation':
@@ -133,22 +132,19 @@ class BrowsingAgent(Agent):
     async def create_run(self, message):
         text_storage = ""
         self.message_list.append({'role': 'user', 'content': message})
-        while True:
+        while self.conversation==True:
             text_storage = ''
-            await_response = False
             initial_response = True
             #print(chat_history)
             async for text, function_flag, function_responses in self.get_ai_response(self.message_list):
                 #print(chat_history)
-                print(text)
                 if text != None:
                     if initial_response:
                         initial_response = False
                     text_storage = text_storage + text
                 if function_flag:
                     text_storage = text_storage + "These are the tool call results: " + str(function_responses)
-                    await_response = True
-        
+            
             self.message_list.append({'role': 'user', 'content': text_storage})
             
 
