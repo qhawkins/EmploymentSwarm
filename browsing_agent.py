@@ -71,7 +71,7 @@ class BrowsingAgent(Agent):
             tool_choice='auto'
         )
         tool_args = []
-        function_response = {}
+        function_response = ""
         function_flag = False
 
         async for response_chunk in response_generator:
@@ -93,7 +93,7 @@ class BrowsingAgent(Agent):
                 
                     print(f"function name: {function_name}, function args: {tool_args}")
                     print(tool_dict)
-                    function_response[function_name] = await self.call_function(
+                    function_response = await self.call_function(
                         tool_dict
                     )
                     tool_dict = {}
@@ -109,37 +109,33 @@ class BrowsingAgent(Agent):
         return False
 
     async def call_function(self, func_call):
-        func_output = {}
         for function_name, function_args in func_call.items():
             if function_name == 'view_page':
                 response = await self.view_page(**function_args)
-                func_output[function_name] = response
-
+                
             elif function_name == 'move_cursor':
                 response = await self.move_cursor(**function_args)
-                func_output[function_name] = response
-
+                
             elif function_name == 'load_page':
                 print("load function")
                 response = await self.load_page(**function_args)
-                func_output[function_name] = response
-            
+                
             elif function_name == 'end_conversation':
                 response = await self.end_conversation(**function_args)
                 #func_output[function_name] = response
                 self.conversation = False
 
-        return func_output
+        return response
        
     async def create_run(self, message):
         text_storage = ""
         self.message_list.append({'role': 'user', 'content': message})
-        await_response = True
         while self.conversation == True:
+            await_response = False
             async for text, function_flag, function_responses in self.get_ai_response():
                 if text != None:
                     text_storage = text_storage + text
-                if function_flag:
+                if function_flag == True:
                     text_storage = text_storage + "Incorporate the results of the function calling into your context. These are the function call results: " + str(function_responses)
                     await_response = True
             
@@ -150,10 +146,10 @@ class BrowsingAgent(Agent):
                 async for text, function_flag, function_responses in self.get_ai_response():
                     if text != None:
                         text_storage = text_storage + text
-                    if function_flag:
+                    if function_flag == True:
                         text_storage = text_storage + str(function_responses)
-                        
-                await_response = False
+                        await_response = True
+
             
                 self.message_list.append({'role': 'assistant', 'content': text_storage})
                 print(self.message_list[-1])
