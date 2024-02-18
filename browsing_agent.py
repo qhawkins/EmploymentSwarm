@@ -69,7 +69,8 @@ class BrowsingAgent(Agent):
         messages=message_list,
         stream=True,
         tools=self.tools,
-        tool_choice='auto'
+        tool_choice='auto',
+        temperature=0
         )
         func_call = {}
         tool_args = []
