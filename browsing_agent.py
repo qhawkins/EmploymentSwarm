@@ -63,6 +63,9 @@ class BrowsingAgent(Agent):
         pyautogui.moveRel(x, y, duration=1.2)
         return f"Cursor moved relative to the past position by {x} pixels in the x direction and {y} pixels in the y direction."
 
+    async def get_url(self):
+        return self.driver.current_url
+
     async def click_element(self):
         pyautogui.click()
         return "Click performed, run view_page in order to understand whether the click has been successful or not."
@@ -139,6 +142,9 @@ class BrowsingAgent(Agent):
             
             elif function_name == 'get_cursor_position':
                 response = await self.get_cursor_position()
+            
+            elif function_name == 'get_url':
+                response = await self.get_url()
 
         return response
        

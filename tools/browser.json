@@ -95,6 +95,19 @@
       ]
       }
     }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_url",
+      "description": "function to retrieve the current URL of the webpage.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+        },
+        "required": [
+      ]
+      }
+    }
   }
-
 ]
