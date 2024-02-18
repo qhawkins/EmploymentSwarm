@@ -40,6 +40,14 @@
         "parameters": {
           "type": "object",
           "properties": {
+            "x": {
+              "type": "number",
+              "description": "The x-coordinate to move the cursor to."
+            },
+            "y": {
+              "type": "number",
+              "description": "The y-coordinate to move the cursor to."
+            }
           },
           "required": [
             "x",

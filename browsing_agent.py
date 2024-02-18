@@ -95,7 +95,7 @@ class BrowsingAgent(Agent):
 
                     
                         print(f"function name: {function_name}, function args: {tool_args}")
-                        print(tool_dict)
+                        #print(tool_dict)
                         function_response = await self.call_function(
                             tool_dict
                         )
@@ -132,29 +132,24 @@ class BrowsingAgent(Agent):
     async def create_run(self, message):
         text_storage = ""
         self.message_list.append({'role': 'user', 'content': message})
-        while self.conversation == True:
+        while True:
+            text_storage = ''
             await_response = False
+            initial_response = True
+            #print(chat_history)
             async for text, function_flag, function_responses in self.get_ai_response():
+                #print(chat_history)
+                print(text)
                 if text != None:
+                    if initial_response:
+                        initial_response = False
                     text_storage = text_storage + text
-                if function_flag == True:
-                    text_storage = text_storage + "Incorporate the results of the function calling into your context. These are the function call results: " + str(function_responses)
+                if function_flag:
+                    text_storage = text_storage + "These are the tool call results: " + str(function_responses)
                     await_response = True
-            
+        
             self.message_list.append({'role': 'assistant', 'content': text_storage})
-            text_storage = ""
-
-            if await_response:
-                async for text, function_flag, function_responses in self.get_ai_response():
-                    if text != None:
-                        text_storage = text_storage + text
-                    if function_flag == True:
-                        text_storage = text_storage + str(function_responses)
-                        await_response = True
-
             
-                self.message_list.append({'role': 'assistant', 'content': text_storage})
-                print(self.message_list[-1])
 
             
         
