@@ -25,7 +25,7 @@ class BrowsingAgent(Agent):
     
     async def load_page(self, url: str):
         self.driver.get(url)
-        return f"Webpage loaded at {url}"
+        return f"Webpage loaded at {url}, continue to next step."
 
     async def view_page(self): 
         screenshot = self.driver.get_screenshot_as_png()
@@ -84,7 +84,7 @@ class BrowsingAgent(Agent):
                     function_arguments = deltas.tool_calls[0].function.arguments
                     tool_args.append(function_arguments)#.replace('"', '').replace("'", ''))
                     
-                if deltas.content==None and deltas.function_call==None and deltas.role==None and deltas.tool_calls==None and '"}' in tool_args:
+                if deltas.content==None and deltas.function_call==None and deltas.role==None and deltas.tool_calls==None and '"}' in tool_args and len(tool_args)>0:
                     tool_args = ''.join(tool_args)
                     tool_args = json.loads(tool_args)
                     tool_dict = {}
@@ -99,8 +99,7 @@ class BrowsingAgent(Agent):
                     tool_dict = {}
                     tool_args = []
                     function_flag = True
-                    yield deltas.content, function_flag, function_response
-            
+                    
             if deltas.content != None:
                 yield deltas.content, function_flag, function_response
 
@@ -143,12 +142,17 @@ class BrowsingAgent(Agent):
                 if function_flag:
                     text_storage = text_storage + "Incorporate the results of the function calling into your context. These are the function call results: " + str(function_responses)
                     await_response = True
-                    self.message_list.append({'role': 'assistant', 'content': text_storage})
             
+            self.message_list.append({'role': 'assistant', 'content': text_storage})
+            text_storage = ""
+
             if await_response:
                 async for text, function_flag, function_responses in self.get_ai_response():
                     if text != None:
                         text_storage = text_storage + text
+                    if function_flag:
+                        text_storage = text_storage + str(function_responses)
+                        
                 await_response = False
             
             self.message_list.append({'role': 'assistant', 'content': text_storage})
