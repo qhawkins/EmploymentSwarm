@@ -64,46 +64,48 @@ class BrowsingAgent(Agent):
 
     async def get_ai_response(self):
         response_generator = await self.client.chat.completions.create(
-            model='gpt-4-turbo-preview',
-            messages=self.message_list,
-            stream=True,
-            tools=self.tools,
-            tool_choice='auto'
+        model=self.engine,
+        messages=self.message_list,
+        stream=True,
+        tools=self.tools,
+        tool_choice='auto'
         )
+        func_call = {}
         tool_args = []
-        function_response = ""
+        function_response = {}
         function_flag = False
 
         async for response_chunk in response_generator:
-            if response_chunk.choices != None:
+            if len(response_chunk.choices) != 0:
                 deltas = response_chunk.choices[0].delta
-                if deltas.tool_calls != None and deltas.tool_calls[0].function.name != None:
-                    function_name = deltas.tool_calls[0].function.name
-                    
-                if deltas.tool_calls != None and deltas.tool_calls[0].function.arguments != None:    
-                    function_arguments = deltas.tool_calls[0].function.arguments
-                    tool_args.append(function_arguments)#.replace('"', '').replace("'", ''))
-                    
-                if deltas.content==None and deltas.function_call==None and deltas.role==None and deltas.tool_calls==None and '"}' in tool_args and len(tool_args)>0:
-                    tool_args = ''.join(tool_args)
-                    tool_args = json.loads(tool_args)
-                    tool_dict = {}
-                    tool_dict[function_name] = tool_args
+                if deltas != None and deltas.tool_calls != None:
+                    if deltas.tool_calls[0].function.name != None:
+                        function_name = deltas.tool_calls[0].function.name
+                    if deltas.tool_calls[0].function.arguments != None:    
+                        function_arguments = deltas.tool_calls[0].function.arguments
+                    #print(function_name)
+                    #print(function_arguments)
+                    if function_arguments != '' or None:
+                        tool_args.append(function_arguments)#.replace('"', '').replace("'", ''))
+                    if len(tool_args)>0 and "}" in tool_args[-1]:
+                        tool_args = ''.join(tool_args)
+                        tool_args = json.loads(tool_args)
+                        tool_dict = {}
+                        tool_dict[function_name] = tool_args
 
-                
-                    print(f"function name: {function_name}, function args: {tool_args}")
-                    print(tool_dict)
-                    function_response = await self.call_function(
-                        tool_dict
-                    )
-                    tool_dict = {}
-                    tool_args = []
-                    function_flag = True
                     
-            if deltas.content != None:
-                yield deltas.content, function_flag, function_response
+                        print(f"function name: {function_name}, function args: {tool_args}")
+                        print(tool_dict)
+                        function_response = await self.call_function(
+                            tool_dict
+                        )
+                        tool_dict = {}
+                        tool_args = []
+                        function_flag = True
+                if deltas.content != None:
+                    yield deltas.content, function_flag, function_response
 
-        yield deltas.content, function_flag, function_response                
+        yield deltas.content, function_flag, function_response                      
 
     async def end_conversation(self):
         return False
