@@ -63,7 +63,7 @@ class BrowsingAgent(Agent):
         pyautogui.moveRel(x, y, duration=1.2)
         return f"Cursor moved relative to the past position by {x} pixels in the x direction and {y} pixels in the y direction."
 
-    async def click_element():
+    async def click_element(self):
         pyautogui.click()
         return "Element clicked."
 
