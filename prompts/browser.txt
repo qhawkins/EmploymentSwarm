@@ -23,3 +23,6 @@ When given the task to browse and interact with the webpage, keep these guidelin
 
 ###Evaluating Whether Element Click has Been Successful###
 In order to understand whether the element click has been successful, you need to understand the description of the page both before and after the click. If the appearance of the page changes to the point where most of the clickable elements are different, then you can assume the element click has been successful.
+
+###Action if Click was not Successful###
+If the click was deemed to be not successful, get the cursors location, move the cursor and try clicking again.
