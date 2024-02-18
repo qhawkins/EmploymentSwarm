@@ -81,5 +81,20 @@
         ]
       }
     }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_cursor_position",
+      "description": "function to retrieve the cursors x and y coordinates on the page.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+        },
+        "required": [
+      ]
+      }
+    }
   }
+
 ]

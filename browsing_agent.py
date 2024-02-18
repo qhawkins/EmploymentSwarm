@@ -20,8 +20,7 @@ class BrowsingAgent(Agent):
         self.tools = self.load_tools(f"tools/{self.agent_type}.json")
         self.screenshot_prompt = self.load_prompt(f"prompts/screenshotter.txt")
         self.screenshot_system_prompt = self.load_prompt(f"prompts/screenshotter_system.txt")
-        self.conversation = True
-
+        
     
     async def load_page(self, url: str):
         self.driver.get(url)
@@ -116,6 +115,9 @@ class BrowsingAgent(Agent):
     async def end_conversation(self):
         return False
 
+    async def get_cursor_position(self):
+        return str(pyautogui.position())
+
     async def call_function(self, func_call):
         for function_name, function_args in func_call.items():
             if function_name == 'view_page':
@@ -133,10 +135,14 @@ class BrowsingAgent(Agent):
                 self.conversation = False
             elif function_name == 'click_element':
                 response = await self.click_element()
+            
+            elif function_name == 'get_cursor_position':
+                response = await self.get_cursor_position()
 
         return response
        
     async def create_run(self, message):
+        self.conversation = True
         text_storage = ""
         self.message_list.append({'role': 'user', 'content': message})
         while self.conversation==True:
