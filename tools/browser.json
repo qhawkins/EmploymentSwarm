@@ -47,5 +47,17 @@
         ]
         }
       }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "end_conversation",
+        "description": "function to end the current conversation once the predefined objectives are complete.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+        }
+      }
     }
+  }
 ]

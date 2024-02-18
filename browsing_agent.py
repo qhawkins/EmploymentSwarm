@@ -20,6 +20,8 @@ class BrowsingAgent(Agent):
         self.tools = self.load_tools(f"tools/{self.agent_type}.json")
         self.screenshot_prompt = self.load_prompt(f"prompts/screenshotter.txt")
         self.screenshot_system_prompt = self.load_prompt(f"prompts/screenshotter_system.txt")
+        self.conversation = True
+
     
     async def load_page(self, url: str):
         self.driver.get(url)
@@ -81,8 +83,7 @@ class BrowsingAgent(Agent):
                 if deltas.tool_calls != None and deltas.tool_calls[0].function.arguments != None:    
                     function_arguments = deltas.tool_calls[0].function.arguments
                     tool_args.append(function_arguments)#.replace('"', '').replace("'", ''))
-                    print(tool_args)
-
+                    
                 if deltas.content==None and deltas.function_call==None and deltas.role==None and deltas.tool_calls==None and '"}' in tool_args:
                     tool_args = ''.join(tool_args)
                     tool_args = json.loads(tool_args)
@@ -92,7 +93,7 @@ class BrowsingAgent(Agent):
                 
                     print(f"function name: {function_name}, function args: {tool_args}")
                     print(tool_dict)
-                    function_response[function_name] = self.call_function(
+                    function_response[function_name] = await self.call_function(
                         tool_dict
                     )
                     tool_dict = {}
@@ -105,6 +106,8 @@ class BrowsingAgent(Agent):
 
         yield deltas.content, function_flag, function_response                
 
+    async def end_conversation(self):
+        return False
 
     async def call_function(self, func_call):
         func_output = {}
@@ -121,6 +124,11 @@ class BrowsingAgent(Agent):
                 print("load function")
                 response = await self.load_page(**function_args)
                 func_output[function_name] = response
+            
+            elif function_name == 'end_conversation':
+                response = await self.end_conversation(**function_args)
+                #func_output[function_name] = response
+                self.conversation = False
 
         return func_output
        
@@ -128,17 +136,29 @@ class BrowsingAgent(Agent):
         text_storage = ""
         self.message_list.append({'role': 'user', 'content': message})
         await_response = True
-        while await_response == True:
+        while self.conversation == True:
             async for text, function_flag, function_responses in self.get_ai_response():
                 if text != None:
                     text_storage = text_storage + text
-                    await_response = False
                 if function_flag:
                     text_storage = text_storage + "Incorporate the results of the function calling into your context. These are the function call results: " + str(function_responses)
                     await_response = True
-        
-        self.message_list.append({'role': 'assistant', 'content': text_storage})
+                    self.message_list.append({'role': 'assistant', 'content': text_storage})
+            
+            if await_response:
+                async for text, function_flag, function_responses in self.get_ai_response():
+                    if text != None:
+                        if initial_response:
+                            initial_response = False
 
+                        text_storage = text_storage + text
+                await_response = False
+            else:
+                self.message_list.append({'role': 'assistant', 'content': text_storage})
+            print(self.message_list[-1])
+
+            
+        
     def retrieve_messages(self):
         return self.message_list
     
