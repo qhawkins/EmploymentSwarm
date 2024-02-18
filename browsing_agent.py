@@ -74,7 +74,7 @@ class BrowsingAgent(Agent):
         stream=True,
         tools=self.tools,
         tool_choice='auto',
-        temperature=0
+        temperature=0.1
         )
         func_call = {}
         tool_args = []
