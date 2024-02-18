@@ -25,7 +25,7 @@ class BrowsingAgent(Agent):
     
     async def load_page(self, url: str):
         self.driver.get(url)
-        return f"Webpage loaded at {url}, continue to next step."
+        return f"Webpage at {url} successfully loaded, continue to next step."
 
     async def view_page(self): 
         screenshot = self.driver.get_screenshot_as_png()
@@ -65,7 +65,7 @@ class BrowsingAgent(Agent):
 
     async def click_element(self):
         pyautogui.click()
-        return "Element clicked."
+        return "Click performed, run view_page in order to understand whether the click has been successful or not."
 
     async def get_ai_response(self, message_list):
         response_generator = await self.client.chat.completions.create(
