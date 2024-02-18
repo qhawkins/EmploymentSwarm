@@ -155,8 +155,8 @@ class BrowsingAgent(Agent):
                         
                 await_response = False
             
-            self.message_list.append({'role': 'assistant', 'content': text_storage})
-            print(self.message_list[-1])
+                self.message_list.append({'role': 'assistant', 'content': text_storage})
+                print(self.message_list[-1])
 
             
         
