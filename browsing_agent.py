@@ -8,7 +8,7 @@ from openai import AsyncOpenAI
 import asyncio
 from mimetypes import guess_type
 import pyautogui
-
+import requests
 
 class BrowsingAgent(Agent):
     def __init__(self, name, engine, agent_type, api_key):
@@ -121,7 +121,7 @@ class BrowsingAgent(Agent):
 
     async def get_cursor_position(self):
         return str(pyautogui.position())
-
+        
     async def call_function(self, func_call):
         for function_name, function_args in func_call.items():
             if function_name == 'view_page':
