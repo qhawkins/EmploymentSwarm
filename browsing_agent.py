@@ -147,11 +147,11 @@ class BrowsingAgent(Agent):
         
         return clickable_elements_names
 
-    async def get_clickable_element_location(self):
+    async def get_clickable_element_locations(self):
         location_dict = {}
         element_names = await self.find_clickable_elements()
         for element_name in element_names:
-            element = self.driver.find_element(By.NAME, element_name)
+            element = self.driver.find_element(By.TAG_NAME, element_name)
             location_dict[element_name] = element.location
         
         return location_dict

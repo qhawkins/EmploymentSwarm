@@ -14,6 +14,8 @@ async def main():
     """
     browsing_agent = BrowsingAgent('browsing_agent_1', 'gpt-4-turbo-preview', 'browser', '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')
     print(await browsing_agent.load_page('https://marketlingo.ai'))
+    print(await browsing_agent.get_clickable_element_locations())
+    exit()
     print(await browsing_agent.find_elements())
     exit()
     
