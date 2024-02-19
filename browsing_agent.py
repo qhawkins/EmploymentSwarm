@@ -202,6 +202,41 @@ class BrowsingAgent(Agent):
         element.send_keys(text)
         return f"Text '{text}' entered into element with id '{element_id}'."
 
+    async def solve_captcha(self):
+        try:
+            recaptcha_element = self.driver.find_element(By.XPATH, '//*[@data-sitekey]')
+        
+            site_key = recaptcha_element.get_attribute('data-sitekey')
+            print(f"Found site key: {site_key}")
+        except Exception as e:
+            print("Could not find the reCAPTCHA site key on this page.")
+            print(e)
+        
+        api_key = "86089cd56483af8dff5acb9255d887b4"
+
+        form = {"method": "userrecaptcha",
+        "googlekey": site_key,
+        "key": api_key,
+        "pageurl": self.driver.current_url,
+        "json": 1}
+
+        response = requests.post('http://2captcha.com/in.php', data=form)
+        request_id = response.json()['request']
+
+        status = 0
+        url = f"http://2captcha.com/res.php?key={api_key}&action=get&id={request_id}&json=1"
+        while not status:
+            res = requests.get(url)
+            if res.json()['status']==0:
+                time.sleep(3)
+            else:
+                requ = res.json()['request']
+                js = f'document.getElementById("g-recaptcha-response").innerHTML="{requ}";'
+                self.driver.execute_script(js)
+                self.driver.find_element(By.ID, "recaptcha-demo-submit").submit()
+                status = 1
+
+        return "Captcha solved."
 
 
     async def call_function(self, func_call):
@@ -239,6 +274,9 @@ class BrowsingAgent(Agent):
             
             elif function_name == 'enter_text':
                 response = await self.enter_text(**function_args)
+            
+            elif function_name == 'solve_captcha':
+                response = await self.solve_captcha()
 
         return response
        

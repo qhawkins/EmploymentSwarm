@@ -18,8 +18,9 @@ THE ELEMENT CLICK HAS ONLY BEEN SUCCESSFUL IF THE NEW DESCRIPTION OF THE PAGE DI
 8. find_clickable_elements: This tool is used to retrieve a list of all clickable elements on the webpage.
 9. go_to_coords: This tool is used to move the cursor to an exact location on the webpage. This can be used after the get_clickable_element_locations tool is run in order to move the cursor to the element's location.
 10. click_element: This tool is used to click on an element on the page with a given name from the arguments.
-11. find_text_elements: This tool is used to retrieve a list of all the elements on the webpage where text can be entered. 
-12. enter_text: This tool is used to enter text into the text element which is specified by its ID in the first argument. The second argument of this tool is the text to be entered.
+11. find_text_elements: This tool is used to retrieve a list of all the elements on the webpage where text can be entered.
+12. enter_text: This tool is used to enter text into the text element which is specified in the first argument. The second argument of this tool is the text to be entered.
+13. solve_captcha: This tool is used to solve recaptchas on the current webpage. There are no arguments necessary.
 
 ###Blueprint for Webpage Interaction###
 When given a task to browse and interact with a webpage, follow these guidelines:

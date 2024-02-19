@@ -205,6 +205,20 @@
           ]
         }
       }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "solve_captcha",
+        "description": "function to solve the captcha for the current webpage.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+          },
+          "required": [
+        ]
+        }
+      }
     }
     
 ]
