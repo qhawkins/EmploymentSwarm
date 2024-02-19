@@ -15,9 +15,7 @@ async def main():
     browsing_agent = BrowsingAgent('browsing_agent_1', 'gpt-4-turbo-preview', 'browser', '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')
     print(await browsing_agent.load_page('https://marketlingo.ai'))
     print(await browsing_agent.get_clickable_element_locations())
-    exit()
-    print(await browsing_agent.find_elements())
-    exit()
+    
     
     await browsing_agent.create_run('View the webpage https://marketlingo.ai and tell me what you see. Click on the element on the page that you find most interesting and tell me about it.')
     messages = browsing_agent.retrieve_messages()

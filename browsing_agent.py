@@ -151,20 +151,18 @@ class BrowsingAgent(Agent):
         location_dict = {}
         element_texts = await self.find_clickable_elements()
 
-        # Assuming element_texts contains visible texts of clickable elements,
-        # you need to find these elements by their text or another method that accurately locates them.
-        # Here's an example approach using XPath to find elements by visible text:
-
         for text in element_texts:
             try:
-                # Using XPath to find an element containing the text.
-                # This is a simple approach and might need adjustments based on your actual requirements.
                 element = self.driver.find_element(By.XPATH, f"//*[contains(text(), '{text}')]")
                 location_dict[text] = element.location
             except:
                 print(f"Element with text '{text}' not found.")
 
-        return location_dict
+        return f"Clickable element locations: {location_dict}"
+    
+    async def go_to_coords(self, x, y):
+        pyautogui.moveTo(x, y, duration=1.2)
+        return f"Cursor moved to coordinates {x}, {y}."
         
     async def call_function(self, func_call):
         for function_name, function_args in func_call.items():
