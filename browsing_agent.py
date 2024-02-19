@@ -148,15 +148,29 @@ class BrowsingAgent(Agent):
         element.click()
         return f"Element with name '{element_name}' clicked."
             
+
     async def go_to_coords(self, x, y):
         pyautogui.moveTo(x, y, duration=1.2)
         return f"Cursor moved to coordinates {x}, {y}."
     
     async def find_text_elements(self):
+        element_names = []
         text_inputs = self.driver.find_elements(By.XPATH, '//input[@type="text"]')
         textareas = self.driver.find_elements(By.TAG_NAME, 'textarea')
-        return text_inputs + textareas
-        
+        elements = text_inputs + textareas
+        for element in elements:
+            name_or_text = element.text.strip() or element.get_attribute('name') or element.get_attribute('value')
+            if name_or_text:  # Ensure the name or text is not empty
+                element_names.append(name_or_text)
+        return element_names
+    
+    async def enter_text(self, element_name, text):
+        element = self.driver.find_element(By.XPATH, f"//*[contains(text(), '{element_name}')]")
+        element.send_keys(text)
+        return f"Text '{text}' entered into element with name '{element_name}'."
+    
+
+
     async def call_function(self, func_call):
         for function_name, function_args in func_call.items():
             if function_name == 'view_page':
@@ -170,7 +184,6 @@ class BrowsingAgent(Agent):
                 
             elif function_name == 'end_conversation':
                 response = await self.end_conversation()
-                #func_output[function_name] = response
                 self.conversation = False
             
             elif function_name == 'get_cursor_position':
@@ -187,6 +200,12 @@ class BrowsingAgent(Agent):
             
             elif function_name == 'click_element':
                 response = await self.click_element(**function_args)
+
+            elif function_name == 'find_text_elements':
+                response = await self.find_text_elements()
+            
+            elif function_name == 'enter_text':
+                response = await self.enter_text(**function_args)
 
         return response
        
