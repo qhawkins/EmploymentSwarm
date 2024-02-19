@@ -9,6 +9,10 @@ import asyncio
 from mimetypes import guess_type
 import pyautogui
 import requests
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class BrowsingAgent(Agent):
     def __init__(self, name, engine, agent_type, api_key):
@@ -121,6 +125,29 @@ class BrowsingAgent(Agent):
 
     async def get_cursor_position(self):
         return str(pyautogui.position())
+
+    async def find_elements(self):
+        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
+        clickable_elements_selectors = [
+            (By.TAG_NAME, 'a'),
+            (By.TAG_NAME, 'button'),
+            # Adding tuples for XPath-based selectors
+            (By.XPATH, "//*[@onclick]"),  # Elements with an 'onclick' attribute
+            (By.XPATH, "//*[@role='button']"),  # Elements with a role attribute set to 'button'
+        ]
+
+        clickable_elements_names = []
+
+        for selector_type, selector_value in clickable_elements_selectors:
+            elements = self.driver.find_elements(selector_type, selector_value)
+            for element in elements:
+                name_or_text = element.text.strip() or element.get_attribute('name') or element.get_attribute('value')
+                if name_or_text:  # Ensure the name or text is not empty
+                    clickable_elements_names.append(name_or_text)
+        
+        return clickable_elements_names
+
+
         
     async def call_function(self, func_call):
         for function_name, function_args in func_call.items():
