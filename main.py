@@ -17,7 +17,7 @@ async def main():
     #print(await browsing_agent.find_text_elements())
     #exit()
 
-    await browsing_agent.create_run('View the webpage https://marketlingo.ai. Click on the "FAQs" link. After that, click on the "Home" link to go back to the homepage. After that, fill out the text fields for the "contact us" form and submit the form.')
+    await browsing_agent.create_run('View the webpage https://marketlingo.ai. Click on the "FAQs" link. After that, click on the "Home" link to go back to the homepage. After that, fill out all of the text fields for the "contact us" form and submit the form.')
     messages = browsing_agent.retrieve_messages()
     for x in messages:
         print(x)

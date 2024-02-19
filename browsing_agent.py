@@ -145,7 +145,11 @@ class BrowsingAgent(Agent):
 
     async def click_element(self, element_name):
         element = self.driver.find_element(By.XPATH, f"//*[contains(text(), '{element_name}')]")
-        element.click()
+        try:
+            element.click()
+        except:
+            return f"Element with name '{element_name}' not clickable."
+        
         return f"Element with name '{element_name}' clicked."
             
 
