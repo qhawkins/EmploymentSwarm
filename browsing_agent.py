@@ -70,10 +70,6 @@ class BrowsingAgent(Agent):
     async def get_url(self):
         return self.driver.current_url
 
-    async def click_element(self):
-        pyautogui.click()
-        return "Click performed, run view_page in order to understand whether the click has been successful or not."
-
     async def get_ai_response(self, message_list):
         response_generator = await self.client.chat.completions.create(
         model=self.engine,
