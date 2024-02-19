@@ -129,7 +129,7 @@
     "type": "function",
     "function": {
       "name": "click_element",
-      "description": "function to click on the element with a defined name.",
+      "description": "function to click on the element with a name defined in the arguments.",
       "parameters": {
         "type": "object",
         "properties": {
