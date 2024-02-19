@@ -104,9 +104,48 @@
       "parameters": {
         "type": "object",
         "properties": {
+          
         },
         "required": [
       ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_clickable_element_locations",
+      "description": "function to retrieve the x and y coordinates of all clickable elements on the page.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+        },
+        "required": [
+      ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "go_to_coords",
+      "description": "function to move cursor to absolute x and y coordinates on the webpage.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "number",
+            "description": "The x-coordinate to move the cursor to."
+          },
+          "y": {
+            "type": "number",
+            "description": "The y-coordinate to move the cursor to."
+        },
+        "required": [
+          "x",
+          "y"
+          ]
+        }
       }
     }
   }
