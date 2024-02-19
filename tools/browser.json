@@ -190,9 +190,9 @@
         "parameters": {
           "type": "object",
           "properties": {
-            "element_name": {
+            "element_id": {
               "type": "string",
-              "description": "The name of the element to enter text into."
+              "description": "The id of the element to enter text into."
             },
             "text": {
               "type": "string",
@@ -200,7 +200,7 @@
             }
           },
           "required": [
-            "element_name",
+            "element_id",
             "text"
           ]
         }
