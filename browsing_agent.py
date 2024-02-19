@@ -151,6 +151,11 @@ class BrowsingAgent(Agent):
     async def go_to_coords(self, x, y):
         pyautogui.moveTo(x, y, duration=1.2)
         return f"Cursor moved to coordinates {x}, {y}."
+    
+    async def find_text_elements(self):
+        text_inputs = self.driver.find_elements(By.XPATH, '//input[@type="text"]')
+        textareas = self.driver.find_elements(By.TAG_NAME, 'textarea')
+        return text_inputs + textareas
         
     async def call_function(self, func_call):
         for function_name, function_args in func_call.items():
