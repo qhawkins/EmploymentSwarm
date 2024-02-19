@@ -180,7 +180,7 @@ class BrowsingAgent(Agent):
             elif function_name == 'get_url':
                 response = await self.get_url()
             
-            elif function_name == "get_clickable_element_locations":
+            elif function_name == "find_clickable_elements":
                 response = await self.find_clickable_elements()
 
             elif function_name == 'go_to_coords':
