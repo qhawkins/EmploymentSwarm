@@ -140,6 +140,7 @@
           "y": {
             "type": "number",
             "description": "The y-coordinate to move the cursor to."
+          }
         },
         "required": [
           "x",
@@ -148,5 +149,4 @@
         }
       }
     }
-  }
 ]
