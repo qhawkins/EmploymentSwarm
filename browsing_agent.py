@@ -147,19 +147,11 @@ class BrowsingAgent(Agent):
         
         return clickable_elements_names
 
-    async def get_clickable_element_locations(self):
-        location_dict = {}
-        element_texts = await self.find_clickable_elements()
-
-        for text in element_texts:
-            try:
-                element = self.driver.find_element(By.XPATH, f"//*[contains(text(), '{text}')]")
-                location_dict[text] = element.location
-            except:
-                print(f"Element with text '{text}' not found.")
-
-        return f"Clickable element locations: {location_dict}"
-    
+    async def click_element(self, element_name):
+        element = self.driver.find_element(By.XPATH, f"//*[contains(text(), '{element_name}')]")
+        element.click()
+        return f"Element with name '{element_name}' clicked."
+            
     async def go_to_coords(self, x, y):
         pyautogui.moveTo(x, y, duration=1.2)
         return f"Cursor moved to coordinates {x}, {y}."
