@@ -247,6 +247,7 @@ class BrowsingAgent(Agent):
 
 
 	async def solve_captcha(self):
+		site_key = None
 		try:
 			recaptcha_element = self.driver.find_element(By.XPATH, '//*[@data-sitekey]')
 		
@@ -256,7 +257,7 @@ class BrowsingAgent(Agent):
 			print("Could not find the reCAPTCHA site key on this page.")
 			print(e)
 		
-		if not site_key:
+		if site_key==None:
 			site_key = await self.find_recaptcha_site_key()
 
 		api_key = "86089cd56483af8dff5acb9255d887b4"
@@ -324,11 +325,17 @@ class BrowsingAgent(Agent):
 		elif function_name == 'solve_captcha':
 			response = await self.solve_captcha()
 
+
 		return response
 
 	async def call_function(self, func_call):
 		responses = {}
 		for function_name, function_args in func_call.items():
+			if function_name == "multi_tool_use.parallel":
+				for function_name, function_args in function_args.items():
+					responses[function_name] = await self.run_functions(function_name, function_args)
+				return responses
+			
 			responses[function_name] = await self.run_functions(function_name, function_args)
 		return responses
 	
