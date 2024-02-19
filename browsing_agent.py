@@ -126,7 +126,7 @@ class BrowsingAgent(Agent):
     async def get_cursor_position(self):
         return str(pyautogui.position())
 
-    async def find_elements(self):
+    async def find_clickable_elements(self):
         WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
         clickable_elements_selectors = [
             (By.TAG_NAME, 'a'),
@@ -147,7 +147,14 @@ class BrowsingAgent(Agent):
         
         return clickable_elements_names
 
-
+    async def get_clickable_element_location(self):
+        location_dict = {}
+        element_names = await self.find_clickable_elements()
+        for element_name in element_names:
+            element = self.driver.find_element(By.NAME, element_name)
+            location_dict[element_name] = element.location
+        
+        return location_dict
         
     async def call_function(self, func_call):
         for function_name, function_args in func_call.items():
