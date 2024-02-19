@@ -187,6 +187,12 @@ class BrowsingAgent(Agent):
             
             elif function_name == 'get_url':
                 response = await self.get_url()
+            
+            elif function_name == "get_clickable_element_locations":
+                response = await self.get_clickable_element_locations()
+
+            elif function_name == 'go_to_coords':
+                response = await self.go_to_coords(**function_args)
 
         return response
        
