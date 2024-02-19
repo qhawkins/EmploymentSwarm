@@ -167,8 +167,6 @@ class BrowsingAgent(Agent):
                 response = await self.end_conversation()
                 #func_output[function_name] = response
                 self.conversation = False
-            elif function_name == 'click_element':
-                response = await self.click_element()
             
             elif function_name == 'get_cursor_position':
                 response = await self.get_cursor_position()
