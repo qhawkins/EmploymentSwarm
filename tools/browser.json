@@ -167,5 +167,44 @@
           ]
         }
       }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "find_text_elements",
+        "description": "function to retrieve the names of all text entry elements on the page.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+          },
+          "required": [
+        ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "enter_text",
+        "description": "function to enter text into the text element with a name defined in the arguments.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "element_name": {
+              "type": "string",
+              "description": "The name of the element to enter text into."
+            },
+            "text": {
+              "type": "string",
+              "description": "the text to enter in the selected text element."
+            }
+          },
+          "required": [
+            "element_name",
+            "text"
+          ]
+        }
+      }
     }
+    
 ]
