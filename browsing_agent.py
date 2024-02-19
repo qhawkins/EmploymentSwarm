@@ -165,10 +165,21 @@ class BrowsingAgent(Agent):
         return element_names
     
     async def enter_text(self, element_name, text):
-        element = self.driver.find_element(By.XPATH, f"//*[contains(text(), '{element_name}')]")
+        # Try finding an input element with the specified name attribute
+        try:
+            element = self.driver.find_element(By.NAME, element_name)
+        except:
+            # If not found by name, try finding a textarea by name as a fallback
+            try:
+                element = self.driver.find_element(By.XPATH, f"//textarea[@name='{element_name}']")
+            except:
+                # If still not found, raise an error or handle it as needed
+                raise f"Element with name '{element_name}' not found."
+        
+        element.clear()  # Clear the text field before entering text
         element.send_keys(text)
         return f"Text '{text}' entered into element with name '{element_name}'."
-    
+
 
 
     async def call_function(self, func_call):
