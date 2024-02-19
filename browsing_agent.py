@@ -149,11 +149,21 @@ class BrowsingAgent(Agent):
 
     async def get_clickable_element_locations(self):
         location_dict = {}
-        element_names = await self.find_clickable_elements()
-        for element_name in element_names:
-            element = self.driver.find_element(By.TAG_NAME, element_name)
-            location_dict[element_name] = element.location
-        
+        element_texts = await self.find_clickable_elements()
+
+        # Assuming element_texts contains visible texts of clickable elements,
+        # you need to find these elements by their text or another method that accurately locates them.
+        # Here's an example approach using XPath to find elements by visible text:
+
+        for text in element_texts:
+            try:
+                # Using XPath to find an element containing the text.
+                # This is a simple approach and might need adjustments based on your actual requirements.
+                element = self.driver.find_element(By.XPATH, f"//*[contains(text(), '{text}')]")
+                location_dict[text] = element.location
+            except:
+                print(f"Element with text '{text}' not found.")
+
         return location_dict
         
     async def call_function(self, func_call):
